@@ -1,4 +1,5 @@
 import joblib
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -61,6 +62,11 @@ with rcol:
             value = 100
         )
 
+    st.subheader(
+        body = "Done? Click below:",
+        text_alignment = "center"
+    )
+
     if st.button(
         label = f"Predict {st.session_state["target_lift"]}",
         width = "stretch",
@@ -72,17 +78,32 @@ with rcol:
         model = st.session_state["assets"]["models"][f"{target.lower()}"]
 
         input_df = pd.DataFrame({
-            "AGE": st.session_state["input_age"],
-            "IS_MALE": int("Male" == st.session_state["input_sex"]),
             "WEIGHT": st.session_state["input_bodyweight"],
             f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"],
-            f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"]
+            f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"],
+            "IS_MALE": int("Male" == st.session_state["input_sex"]),
+            "AGE_DELTA_35": np.abs(st.session_state["input_age"] - 30),
         }, index=[1])
 
-        input_df
+        numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
+
+        input_df[numerical_predictors] = scaler.transform(input_df[numerical_predictors])
+        # input_df
+        # scaler.feature_names_in_
+
+        prediction = np.round(float(model.predict(input_df)[0]), decimals = 2)
+        st.session_state["prediction"] = prediction
+
+        st.markdown(
+            body = f"##### Estimated {target}: :red[{prediction}] kg",
+            text_alignment = "center"
+        )
+
+    if "predicted_score" in st.session_state:
+        st.session_state["predicted_score"]
         
     
-if "target_lift" in st.session_state:
+if "prediction" in st.session_state:
     st.markdown(
         body = f"#### Correlation between {predictor_lifts[0]} and {predictor_lifts[1]}",
         text_alignment = "center"
