@@ -25,6 +25,7 @@ with lcol:
     st.radio(
         label = "Which of the three scores are you MISSING?",
         options = [lift for lift in st.session_state["lifts"]],
+        horizontal = True,
         key = "target_lift",
         persist_state = "session"
     )
@@ -34,6 +35,7 @@ with lcol:
     st.radio(
         label = "Select your GENDER:",
         options = ["Male", "Female"],
+        horizontal = True,
         key = "input_sex",
         persist_state = "session"
     )
@@ -48,7 +50,7 @@ with lcol:
 with rcol:
     
     st.number_input(
-        label = "Enter your weight (kg):",
+        label = "Enter your BODYWEIGHT (kg):",
         min_value = 10.0,
         key = "input_bodyweight",
         value = 75.0
