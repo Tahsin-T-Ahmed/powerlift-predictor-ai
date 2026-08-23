@@ -13,7 +13,7 @@ st.title(
     text_alignment = "center"
 )
 st.markdown(
-    body = '#### "I know my max strength for only two lifts, but not the other one..."',
+    body = '#### "I know my strength for only two lifts, but not the other one..."',
     text_alignment = "center"
 )
 
@@ -112,7 +112,7 @@ if "prediction" in st.session_state:
         color = st.session_state["target_lift"].capitalize()
     )
 
-    f"Chart (scatter-plot) created from {st.session_state["chart_data"].shape[0]} samples"
+    st.caption(f"Chart created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
 
 with st.bottom:
     st.markdown(
