@@ -5,8 +5,16 @@ st.set_page_config(
     layout = "wide"
 )
 
-st.title("1RepMatch: Data")
-st.subheader("Datasets used in this application:")
+st.title(
+    body = "1RepMatch: Data",
+    text_alignment = "center"
+)
+st.subheader(
+    body = "Datasets used in this application:",
+    text_alignment = "center"
+)
+
+st.divider()
 
 lcol, rcol = st.columns(2)
 
