@@ -98,6 +98,10 @@ if st.button(
         body = f"### Estimated {target}: :red[{prediction}] kg",
         text_alignment = "center"
     )
+
+
+with st.container(horizontal = True, horizontal_alignment = "center"):    
+    f"WARNING: This app's predictions are only estimates. Please exercise with caution."
         
     
 if "prediction" in st.session_state:
@@ -114,8 +118,4 @@ if "prediction" in st.session_state:
 
     st.caption(f"Chart created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
 
-with st.bottom:
-    st.markdown(
-        body = "###### WARNING: These predictions are only estimates. Please exercise with caution. Start light.",
-        text_alignment = "center"
-    )
+# with st.bottom:
