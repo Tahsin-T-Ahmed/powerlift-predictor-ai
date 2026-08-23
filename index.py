@@ -23,4 +23,8 @@ st.session_state["training_dataset"] = pd.read_csv(
     index_col = 0
 )
 
+st.session_state["chart_data"] = st.session_state["training_dataset"].sample(n=1000)
+
+st.session_state["lifts"] = ["SQUAT", "BENCH", "DEADLIFT"]
+
 nav.run()
