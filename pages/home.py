@@ -40,67 +40,64 @@ with lcol:
 
     st.number_input(
         label = "How old are you?",
-        min_value = 8,
+        min_value = 8.0,
         key = "input_age",
-        value = 25
-    )
-    
-    st.number_input(
-        label = "Enter your weight (KG):",
-        min_value = 10,
-        key = "input_bodyweight",
-        value = 75
+        value = 25.0
     )
 
 with rcol:
+    
+    st.number_input(
+        label = "Enter your weight (kg):",
+        min_value = 10.0,
+        key = "input_bodyweight",
+        value = 75.0
+    )
 
     for predictor_lift in predictor_lifts:
         st.number_input(
-            label = f"Enter your max {predictor_lift}:",
-            min_value = 0,
+            label = f"Enter your max {predictor_lift} (kg):",
+            min_value = 0.0,
             key = f"input_{predictor_lift.lower()}",
-            value = 100
+            value = 100.0
         )
 
-    st.subheader(
-        body = "Done? Click below:",
+st.subheader(
+    body = "Done? Click below:",
+    text_alignment = "center"
+)
+
+if st.button(
+    label = f"Predict {st.session_state["target_lift"]}",
+    width = "stretch",
+    icon = ":material/touch_app:",
+    # on_click = lambda: generate_prediction(st.session_state["target_lift"])
+):
+    target = st.session_state["target_lift"]
+    scaler = st.session_state["assets"]["scalers"][f"{target.lower()}"]
+    model = st.session_state["assets"]["models"][f"{target.lower()}"]
+
+    input_df = pd.DataFrame({
+        "WEIGHT": st.session_state["input_bodyweight"],
+        f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"],
+        f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"],
+        "IS_MALE": int("Male" == st.session_state["input_sex"]),
+        "AGE_DELTA_35": np.abs(st.session_state["input_age"] - 30),
+    }, index=[1])
+
+    numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
+
+    input_df[numerical_predictors] = scaler.transform(input_df[numerical_predictors])
+    # input_df
+    # scaler.feature_names_in_
+
+    prediction = np.round(float(model.predict(input_df)[0]), decimals = 2)
+    st.session_state["prediction"] = prediction
+
+    st.markdown(
+        body = f"### Estimated {target}: :red[{prediction}] kg",
         text_alignment = "center"
     )
-
-    if st.button(
-        label = f"Predict {st.session_state["target_lift"]}",
-        width = "stretch",
-        icon = ":material/touch_app:",
-        # on_click = lambda: generate_prediction(st.session_state["target_lift"])
-    ):
-        target = st.session_state["target_lift"]
-        scaler = st.session_state["assets"]["scalers"][f"{target.lower()}"]
-        model = st.session_state["assets"]["models"][f"{target.lower()}"]
-
-        input_df = pd.DataFrame({
-            "WEIGHT": st.session_state["input_bodyweight"],
-            f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"],
-            f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"],
-            "IS_MALE": int("Male" == st.session_state["input_sex"]),
-            "AGE_DELTA_35": np.abs(st.session_state["input_age"] - 30),
-        }, index=[1])
-
-        numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
-
-        input_df[numerical_predictors] = scaler.transform(input_df[numerical_predictors])
-        # input_df
-        # scaler.feature_names_in_
-
-        prediction = np.round(float(model.predict(input_df)[0]), decimals = 2)
-        st.session_state["prediction"] = prediction
-
-        st.markdown(
-            body = f"##### Estimated {target}: :red[{prediction}] kg",
-            text_alignment = "center"
-        )
-
-    if "predicted_score" in st.session_state:
-        st.session_state["predicted_score"]
         
     
 if "prediction" in st.session_state:
@@ -116,8 +113,6 @@ if "prediction" in st.session_state:
     )
 
     f"Chart (scatter-plot) created from {st.session_state["chart_data"].shape[0]} samples"
-else:
-    "Select an exercise to predict your strength"
 
 with st.bottom:
     st.markdown(
