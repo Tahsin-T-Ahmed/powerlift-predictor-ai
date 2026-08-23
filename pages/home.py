@@ -112,17 +112,15 @@ if "prediction" in st.session_state:
         data = st.session_state["chart_data"],
         x = predictor_lifts[0].capitalize(),
         y = predictor_lifts[1].capitalize(),
-        color = "Sex"
+        color = st.session_state["target_lift"].capitalize()
     )
 
     f"Chart (scatter-plot) created from {st.session_state["chart_data"].shape[0]} samples"
 else:
     "Select an exercise to predict your strength"
 
-st.session_state
-
 with st.bottom:
     st.markdown(
-        body = "###### WARNING: These predictions are only estimates, and are not meant to be exact. Please exercise caution.",
+        body = "###### WARNING: These predictions are only estimates. Please exercise with caution. Start light.",
         text_alignment = "center"
     )
