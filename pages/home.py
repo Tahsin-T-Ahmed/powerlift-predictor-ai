@@ -1,9 +1,10 @@
 import joblib
+import pandas as pd
 import streamlit as st
 
 st.set_page_config(
     page_title = "1RepMatch: Predict Powerlifting Strength",
-    layout = "wide"
+    layout = "centered"
 )
 
 st.title(
@@ -17,7 +18,7 @@ st.markdown(
 
 st.divider()
 
-lcol, mcol, rcol = st.columns((2, 2, 4))
+lcol, rcol = st.columns(2)
 
 with lcol:
     st.radio(
@@ -50,7 +51,7 @@ with lcol:
         value = 75
     )
 
-with mcol:
+with rcol:
 
     for predictor_lift in predictor_lifts:
         st.number_input(
@@ -60,30 +61,47 @@ with mcol:
             value = 100
         )
 
-    st.button(
+    if st.button(
         label = f"Predict {st.session_state["target_lift"]}",
         width = "stretch",
-        icon = ":material/touch_app:"
-    )
-    
-with rcol:
-    if "target_lift" in st.session_state:
-        st.markdown(
-            body = f"#### Correlation between {predictor_lifts[0]} and {predictor_lifts[1]}",
-            text_alignment = "center"
-        )
-        st.scatter_chart(
-            data = st.session_state["chart_data"],
-            x = predictor_lifts[0].capitalize(),
-            y = predictor_lifts[1].capitalize(),
-            color = "Sex"
-        )
+        icon = ":material/touch_app:",
+        # on_click = lambda: generate_prediction(st.session_state["target_lift"])
+    ):
+        target = st.session_state["target_lift"]
+        scaler = st.session_state["assets"]["scalers"][f"{target.lower()}"]
+        model = st.session_state["assets"]["models"][f"{target.lower()}"]
 
-        f"Chart (scatter-plot) created from {st.session_state["chart_data"].shape[0]} samples"
-    else:
-        "Select an exercise to predict your strength"
+        input_df = pd.DataFrame({
+            "AGE": st.session_state["input_age"],
+            "IS_MALE": int("Male" == st.session_state["input_sex"]),
+            "WEIGHT": st.session_state["input_bodyweight"],
+            f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"],
+            f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"]
+        }, index=[1])
+
+        input_df
+        
+    
+if "target_lift" in st.session_state:
+    st.markdown(
+        body = f"#### Correlation between {predictor_lifts[0]} and {predictor_lifts[1]}",
+        text_alignment = "center"
+    )
+    st.scatter_chart(
+        data = st.session_state["chart_data"],
+        x = predictor_lifts[0].capitalize(),
+        y = predictor_lifts[1].capitalize(),
+        color = "Sex"
+    )
+
+    f"Chart (scatter-plot) created from {st.session_state["chart_data"].shape[0]} samples"
+else:
+    "Select an exercise to predict your strength"
 
 st.session_state
 
 with st.bottom:
-    "WARNING: These predictions are only estimates, and are not meant to be exact. Please exercise caution."
+    st.markdown(
+        body = "###### WARNING: These predictions are only estimates, and are not meant to be exact. Please exercise caution.",
+        text_alignment = "center"
+    )
