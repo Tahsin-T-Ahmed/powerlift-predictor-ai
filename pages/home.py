@@ -70,8 +70,7 @@ st.subheader(
 if st.button(
     label = f"Predict {st.session_state["target_lift"]}",
     width = "stretch",
-    icon = ":material/touch_app:",
-    # on_click = lambda: generate_prediction(st.session_state["target_lift"])
+    icon = ":material/touch_app:"
 ):
     target = st.session_state["target_lift"]
     scaler = st.session_state["assets"]["scalers"][f"{target.lower()}"]
@@ -88,8 +87,6 @@ if st.button(
     numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
 
     input_df[numerical_predictors] = scaler.transform(input_df[numerical_predictors])
-    # input_df
-    # scaler.feature_names_in_
 
     prediction = np.round(float(model.predict(input_df)[0]), decimals = 2)
     st.session_state["prediction"] = prediction
@@ -117,5 +114,3 @@ if "prediction" in st.session_state:
     )
 
     st.caption(f"Chart created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
-
-# with st.bottom:
