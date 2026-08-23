@@ -48,6 +48,13 @@ with lcol:
     )
 
 with rcol:
+    st.radio(
+        label = "Preferred WEIGHT UNIT:",
+        options = ["Kilograms (kg)", "Pounds (lbs)"],
+        horizontal = True,
+        key = "weight_unit",
+        persist_state = "session"
+    )
     
     st.number_input(
         label = "Enter your BODYWEIGHT (kg):",
@@ -56,13 +63,21 @@ with rcol:
         value = 75.0
     )
 
-    for predictor_lift in predictor_lifts:
-        st.number_input(
-            label = f"Enter your max {predictor_lift} (kg):",
-            min_value = 0.0,
-            key = f"input_{predictor_lift.lower()}",
-            value = 100.0
-        )
+    lift_col1, lift_col2 = st.columns(2)
+
+    for i, predictor_lift in enumerate(predictor_lifts):
+        if 0 == i:
+            col = lift_col1
+        else:
+            col = lift_col2
+
+        with col:
+            st.number_input(
+                label = f"Max {predictor_lift} {st.session_state['weight_unit'].split(' ')[1]}:",
+                min_value = 0.0,
+                key = f"input_{predictor_lift.lower()}",
+                value = 100.0
+            )
 
 st.subheader(
     body = "Done? Click below:",
@@ -78,10 +93,15 @@ if st.button(
     scaler = st.session_state["assets"]["scalers"][f"{target.lower()}"]
     model = st.session_state["assets"]["models"][f"{target.lower()}"]
 
+    unit_multiplier = 1
+
+    if "lbs" in st.session_state["weight_unit"]:
+        unit_multiplier = 0.45359237
+
     input_df = pd.DataFrame({
-        "WEIGHT": st.session_state["input_bodyweight"],
-        f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"],
-        f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"],
+        "WEIGHT": st.session_state["input_bodyweight"] * unit_multiplier,
+        f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"] * unit_multiplier,
+        f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"] * unit_multiplier,
         "IS_MALE": int("Male" == st.session_state["input_sex"]),
         "AGE_DELTA_35": np.abs(st.session_state["input_age"] - 30),
     }, index=[1])
@@ -94,16 +114,10 @@ if st.button(
     st.session_state["prediction"] = prediction
 
     st.markdown(
-        body = f"### Estimated {target}: :red[{prediction}] kg",
+        body = f"### Estimated {target}: :red[{prediction}] {st.session_state['weight_unit'].split(' ')[1][1:-1]}",
         text_alignment = "center"
     )
-
-
-with st.container(horizontal = True, horizontal_alignment = "center"):    
-    f"WARNING: This app's predictions are only estimates. Please exercise with caution."
-        
-    
-if "prediction" in st.session_state:
+            
     st.markdown(
         body = f"#### Correlation between {predictor_lifts[0]} and {predictor_lifts[1]}",
         text_alignment = "center"
@@ -116,3 +130,6 @@ if "prediction" in st.session_state:
     )
 
     st.caption(f"Chart created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
+
+with st.container(horizontal = True, horizontal_alignment = "center"):    
+    f"WARNING: This app's predictions are only estimates. Please exercise with caution."
