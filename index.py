@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 home_page = st.Page(
     page = "./pages/home.py", 
@@ -15,6 +16,11 @@ dev_page = st.Page(
 nav = st.navigation(
     pages = [home_page, dev_page],
     position = "top"
+)
+
+st.session_state["training_dataset"] = pd.read_csv(
+    "./machine-learning/datasets/training-dataset.csv",
+    index_col = 0
 )
 
 nav.run()
