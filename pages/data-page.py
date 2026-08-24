@@ -21,11 +21,7 @@ lcol, rcol = st.columns(2)
 
 @st.cache_data
 def prepare_dataframe(df):
-    with st.spinner(
-        text = "Preparing data for download...",
-        show_time = True
-    ):
-        return df.to_csv()
+    return df.to_csv()
 
 with lcol:
     training_data = st.session_state["training_dataset"]
@@ -35,14 +31,20 @@ with lcol:
     if st.button(
         label = "Get training dataset",
         width = "stretch"
-    ):
-        training_data_csv = prepare_dataframe(training_data)
+    ):        
+        with st.spinner(
+            text = "Preparing training data...",
+            show_time = True
+        ):
+            training_data_csv = prepare_dataframe(training_data)
+            st.session_state["training_data_csv"] = training_data_csv
 
-        st.success("Training data ready! Click below to download:")
+    if "training_data_csv" in st.session_state:
+        st.success("Training data ready for download! Click below:")
 
         st.download_button(
             label = "DOWNLOAD TRAINING DATA",
-            data = training_data_csv,
+            data = st.session_state["training_data_csv"],
             file_name = "1repmatch-training-dataset-full.csv",
             type = "primary"
         )
@@ -55,14 +57,20 @@ with rcol:
     if st.button(
         label = "Get graph dataset",
         width = "stretch"
-    ):
-        graph_data_csv = prepare_dataframe(graph_data)
+    ):        
+        with st.spinner(
+            text = "Preparing graph data...",
+            show_time = True
+        ):
+            graph_data_csv = prepare_dataframe(graph_data)
+            st.session_state["graph_data_csv"] = graph_data_csv
 
-        st.success("Graph data ready! Click below to download:")
+    if "graph_data_csv" in st.session_state:
+        st.success("Graph data ready for download! Click below:")
 
         st.download_button(
             label = "DOWNLOAD GRAPH DATA",
-            data = graph_data_csv,
+            data = st.session_state["graph_data_csv"],
             file_name = "1repmatch-graph-sampled-data.csv",
             type = "primary"
         )
