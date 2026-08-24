@@ -25,12 +25,27 @@ nav = st.navigation(
     position = "top"
 )
 
-st.session_state["training_dataset"] = pd.read_csv(
-    "./machine-learning/datasets/training-dataset.csv",
-    index_col = 0
-)
+@st.cache_resource
+def load_dataset():
+    dataset = pd.read_csv(
+        "./machine-learning/datasets/training-dataset.csv",
+        index_col = 0
+    )
 
-st.session_state["chart_data"] = st.session_state["training_dataset"].sample(n=1000)
+    return dataset
+
+@st.cache_resource
+def load_chart_data():
+    chart_data = st.session_state["training_dataset"].sample(n=1000)
+
+    return chart_data
+
+with st.spinner(
+    text = "Loading data... This will only take a few seconds",
+    show_time = True
+):
+    st.session_state["training_dataset"] = load_dataset()
+    st.session_state["chart_data"] = load_chart_data()
 
 st.session_state["lifts"] = ["SQUAT", "BENCH", "DEADLIFT"]
 
