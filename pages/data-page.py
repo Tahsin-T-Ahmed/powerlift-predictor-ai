@@ -10,7 +10,7 @@ st.title(
     text_alignment = "center"
 )
 st.subheader(
-    body = "Datasets used in this application:",
+    body = "Datasets used in this application (kg units):",
     text_alignment = "center"
 )
 
