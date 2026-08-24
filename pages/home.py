@@ -53,12 +53,12 @@ with rcol:
     weight_unit_short = weight_unit.split(' ')[1]
 
     kg_lb_ratio = 0.45359237
-
-    num_col1, num_col2 = st.columns(2)
     
     predictor_lifts = [lift for lift in lifts if lift != target_lift]
 
-    with num_col1:
+    age_col, bodyweight_col = st.columns(2)
+
+    with age_col:
         age = st.number_input(
             label = "Age:",
             min_value = 8.0,
@@ -66,19 +66,22 @@ with rcol:
             value = 25.0
         )
 
-    with num_col2:    
+    with bodyweight_col:    
         bodyweight = st.number_input(
             label = f"Bodyweight {weight_unit_short}:",
             min_value = 10.0,
             key = "input_bodyweight",
             value = 75.0
         )
+        
+
+    predictor_lift_col1, predictor_lift_col2 = st.columns(2)
 
     for i, predictor_lift in enumerate(predictor_lifts):
         if 0 == i:
-            col = num_col1
+            col = predictor_lift_col1
         else:
-            col = num_col2
+            col = predictor_lift_col2
 
         with col:
             st.number_input(
