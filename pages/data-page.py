@@ -2,11 +2,12 @@ import streamlit as st
 
 st.set_page_config(
     page_title = "1RepMatch: Data",
+    page_icon = ":material/fitness_center:",
     layout = "wide"
 )
 
 st.title(
-    body = "1RepMatch: Data",
+    body = ":material/fitness_center: 1RepMatch: Data",
     text_alignment = "center"
 )
 st.subheader(

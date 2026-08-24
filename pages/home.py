@@ -5,11 +5,12 @@ import streamlit as st
 
 st.set_page_config(
     page_title = "1RepMatch: Predict Powerlifting Strength",
+    page_icon = ":material/fitness_center:",
     layout = "centered"
 )
 
 st.title(
-    body = "1RepMatch",
+    body = ":material/fitness_center: 1RepMatch",
     text_alignment = "center"
 )
 st.markdown(
