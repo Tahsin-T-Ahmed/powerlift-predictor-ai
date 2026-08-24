@@ -2,7 +2,8 @@ import streamlit as st
 
 st.set_page_config(
     page_title = "1RepMatch: About the Developer",
-    page_icon = ":material/fitness_center:"
+    page_icon = ":material/fitness_center:",
+    layout = "centered"
 )
 
 st.title(
