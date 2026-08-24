@@ -22,17 +22,17 @@ st.divider()
 lcol, rcol = st.columns(2)
 
 with lcol:
-    st.radio(
+    lifts = st.session_state["lifts"]
+
+    target_lift = st.radio(
         label = "Which of the three scores are you MISSING?",
-        options = [lift for lift in st.session_state["lifts"]],
+        options = lifts,
         horizontal = True,
         key = "target_lift",
         persist_state = "session"
     )
 
-    predictor_lifts = [lift for lift in st.session_state["lifts"] if lift != st.session_state["target_lift"]]
-
-    st.radio(
+    gender = st.radio(
         label = "Select your GENDER:",
         options = ["Male", "Female"],
         horizontal = True,
@@ -40,7 +40,7 @@ with lcol:
         persist_state = "session"
     )
 
-    st.number_input(
+    age = st.number_input(
         label = "How old are you?",
         min_value = 8.0,
         key = "input_age",
@@ -48,16 +48,20 @@ with lcol:
     )
 
 with rcol:
-    st.radio(
+    predictor_lifts = [lift for lift in lifts if lift != target_lift]
+
+    weight_unit = st.radio(
         label = "Preferred WEIGHT UNIT:",
         options = ["Kilograms (kg)", "Pounds (lbs)"],
         horizontal = True,
         key = "weight_unit",
         persist_state = "session"
     )
+
+    weight_unit_short = weight_unit.split(' ')[1]
     
-    st.number_input(
-        label = f"Enter your BODYWEIGHT {st.session_state['weight_unit'].split(' ')[1]}:",
+    bodyweight = st.number_input(
+        label = f"Enter your BODYWEIGHT {weight_unit_short}:",
         min_value = 10.0,
         key = "input_bodyweight",
         value = 75.0
@@ -73,7 +77,7 @@ with rcol:
 
         with col:
             st.number_input(
-                label = f"Max {predictor_lift} {st.session_state['weight_unit'].split(' ')[1]}:",
+                label = f"Max {predictor_lift} {weight_unit_short}:",
                 min_value = 0.0,
                 key = f"input_{predictor_lift.lower()}",
                 value = 100.0
@@ -85,11 +89,10 @@ st.subheader(
 )
 
 if st.button(
-    label = f"Predict {st.session_state["target_lift"]}",
+    label = f"Predict {target_lift}",
     width = "stretch",
     icon = ":material/touch_app:"
 ):
-    target = st.session_state["target_lift"]
 
     unit_multiplier = 1
 
@@ -110,14 +113,15 @@ if st.button(
     st.session_state["prediction"] = prediction
 
     st.markdown(
-        body = f"### Estimated {target}: :red[{prediction}] {st.session_state['weight_unit'].split(' ')[1][1:-1]}",
+        body = f"### Estimated {target_lift}: :red[{prediction}] {st.session_state['weight_unit'].split(' ')[1][1:-1]}",
         text_alignment = "center"
     )
             
-    st.markdown(
-        body = f"#### Correlation between {predictor_lifts[0]} and {predictor_lifts[1]}",
-        text_alignment = "center"
-    )
+st.markdown(
+    body = f"#### {predictor_lifts[0]}-{predictor_lifts[1]} correlation by {target_lift}",
+    text_alignment = "center"
+)
+
 st.scatter_chart(
     data = st.session_state["chart_data"],
     x = predictor_lifts[0].capitalize(),
