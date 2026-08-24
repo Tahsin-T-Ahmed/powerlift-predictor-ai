@@ -49,4 +49,6 @@ with st.spinner(
 
 st.session_state["lifts"] = ["SQUAT", "BENCH", "DEADLIFT"]
 
+st.session_state["weight_units"] = ["Kilograms (kg)", "Pounds (lbs)"]
+
 nav.run()

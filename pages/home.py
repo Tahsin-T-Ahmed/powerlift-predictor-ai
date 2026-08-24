@@ -21,7 +21,7 @@ st.markdown(
 with st.container(horizontal = True, horizontal_alignment = "center"):
     '"I know my strength for only two lifts, but not the other one..."'
 
-st.divider()
+# st.divider()
 
 lcol, rcol = st.columns(2)
 
@@ -45,12 +45,9 @@ with lcol:
     )
 
 with rcol:
-    weight_unit = st.radio(
-        label = "Preferred WEIGHT UNIT:",
-        options = ["Kilograms (kg)", "Pounds (lbs)"],
-        horizontal = True,
-        key = "weight_unit",
-        persist_state = "session"
+    weight_unit = st.session_state.get(
+        key = "selected_weight_unit", 
+        default = st.session_state["weight_units"][0]
     )
 
     weight_unit_short = weight_unit.split(' ')[1]
@@ -90,11 +87,6 @@ with rcol:
                 key = f"input_{predictor_lift.lower()}",
                 value = 100.0
             )
-
-st.subheader(
-    body = "Done? Click below:",
-    text_alignment = "center"
-)
 
 @st.cache_resource
 def load_model_and_scaler(target_lift):
@@ -144,12 +136,12 @@ if st.button(
     st.session_state["prediction"] = prediction
 
     st.markdown(
-        body = f"### Estimated {target_lift}: :red[{prediction}] {st.session_state['weight_unit'].split(' ')[1][1:-1]}",
+        body = f"# :red[{prediction}] {st.session_state['selected_weight_unit'].split(' ')[1][1:-1]}",
         text_alignment = "center"
     )
             
 st.markdown(
-    body = f"#### {predictor_lifts[0]}-{predictor_lifts[1]} correlation by {target_lift} {weight_unit_short}",
+    body = f"#### {predictor_lifts[0]}-{predictor_lifts[1]} correlation {weight_unit_short}",
     text_alignment = "center"
 )
 
@@ -173,3 +165,13 @@ st.caption(f"Charts created from {st.session_state['chart_data'].shape[0]} of {s
 
 with st.container(horizontal = True, horizontal_alignment = "center"):    
     f"WARNING: This app's predictions are only estimates. Please exercise with caution."
+
+with st.bottom:
+    with st.container(horizontal = True, horizontal_alignment = "right"):
+        st.radio(
+            label = "Preferred WEIGHT UNIT:",
+            options = st.session_state["weight_units"],
+            horizontal = True,
+            key = "selected_weight_unit",
+            persist_state = "session"
+        )
