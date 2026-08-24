@@ -28,18 +28,20 @@ with lcol:
     st.header("Training Dataset (Full):")
     training_data
 
-    if st.button(
-        label = "Get training dataset",
-        width = "stretch"
-    ):        
-        with st.spinner(
-            text = "Preparing training data...",
-            show_time = True
+    if "training_data_csv" not in st.session_state:
+        if st.button(
+            label = "Get training dataset",
+            width = "stretch"
         ):
-            training_data_csv = prepare_dataframe(training_data)
-            st.session_state["training_data_csv"] = training_data_csv
+            with st.spinner(
+                text = "Preparing training data...",
+                show_time = True
+            ):
+                training_data_csv = prepare_dataframe(training_data)
+                st.session_state["training_data_csv"] = training_data_csv
+                st.rerun()
 
-    if "training_data_csv" in st.session_state:
+    else:
         st.success("Training data ready for download! Click below:")
 
         st.download_button(
@@ -54,18 +56,20 @@ with rcol:
     st.header("Graph Dataset (Sampled):")
     graph_data
 
-    if st.button(
-        label = "Get graph dataset",
-        width = "stretch"
-    ):        
-        with st.spinner(
-            text = "Preparing graph data...",
-            show_time = True
-        ):
-            graph_data_csv = prepare_dataframe(graph_data)
-            st.session_state["graph_data_csv"] = graph_data_csv
+    if "graph_data_csv" not in st.session_state:
+        if st.button(
+            label = "Get graph dataset",
+            width = "stretch"
+        ):        
+            with st.spinner(
+                text = "Preparing graph data...",
+                show_time = True
+            ):
+                graph_data_csv = prepare_dataframe(graph_data)
+                st.session_state["graph_data_csv"] = graph_data_csv
+                st.rerun()
 
-    if "graph_data_csv" in st.session_state:
+    else:
         st.success("Graph data ready for download! Click below:")
 
         st.download_button(
