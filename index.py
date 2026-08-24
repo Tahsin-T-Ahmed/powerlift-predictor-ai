@@ -34,28 +34,4 @@ st.session_state["chart_data"] = st.session_state["training_dataset"].sample(n=1
 
 st.session_state["lifts"] = ["SQUAT", "BENCH", "DEADLIFT"]
 
-@st.cache_resource
-def load_assets():
-    assets = dict()
-    assets["scalers"] = dict()
-    assets["models"] = dict()
-
-    for lift in st.session_state["lifts"]:
-        assets["scalers"][lift.lower()] = joblib.load(
-            filename = f"./machine-learning/artifacts/scalers/{lift}-scaler.joblib"
-        )
-
-        assets["models"][lift.lower()] = joblib.load(
-            filename = f"./machine-learning/artifacts/models/{lift}-modelxgb.pkl"
-        )
-
-    return assets
-
-with st.spinner(
-    text = "Loading assets. This'll only take a few seconds.",
-    show_time = True
-):
-    st.session_state["assets"] = load_assets()
-
-
 nav.run()

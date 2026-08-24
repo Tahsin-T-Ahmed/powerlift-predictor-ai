@@ -90,8 +90,6 @@ if st.button(
     icon = ":material/touch_app:"
 ):
     target = st.session_state["target_lift"]
-    scaler = st.session_state["assets"]["scalers"][f"{target.lower()}"]
-    model = st.session_state["assets"]["models"][f"{target.lower()}"]
 
     unit_multiplier = 1
 
@@ -108,9 +106,7 @@ if st.button(
 
     numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
 
-    input_df[numerical_predictors] = scaler.transform(input_df[numerical_predictors])
-
-    prediction = np.round(float(model.predict(input_df)[0]), decimals = 2)
+    prediction = "Prediction"
     st.session_state["prediction"] = prediction
 
     st.markdown(
@@ -129,7 +125,7 @@ if st.button(
         color = st.session_state["target_lift"].capitalize()
     )
 
-    st.caption(f"Chart created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
+    st.caption(f"Charts created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
 
 with st.container(horizontal = True, horizontal_alignment = "center"):    
     f"WARNING: This app's predictions are only estimates. Please exercise with caution."
