@@ -91,11 +91,11 @@ with rcol:
 @st.cache_resource
 def load_model_and_scaler(target_lift):
     model = joblib.load(
-        filename = f"./machine-learning/artifacts/models/{target_lift}-modelxgb.pkl"
+        filename = f"./machine-learning/artifacts/models/{target_lift.lower()}-modelxgb.pkl"
     )
 
     scaler = joblib.load(
-        filename = f"./machine-learning/artifacts/scalers/{target_lift}-scaler.joblib"
+        filename = f"./machine-learning/artifacts/scalers/{target_lift.lower()}-scaler.joblib"
     )
 
     return model, scaler
