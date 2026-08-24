@@ -9,13 +9,16 @@ st.set_page_config(
 )
 
 st.title(
-    body = "1RepMatch: Unlock your Powerlifting Potential",
+    body = "1RepMatch",
     text_alignment = "center"
 )
 st.markdown(
-    body = '#### "I know my strength for only two lifts, but not the other one..."',
+    body = '#### Unlock your powerlifting potential!',
     text_alignment = "center"
 )
+
+with st.container(horizontal = True, horizontal_alignment = "center"):
+    '"I know my strength for only two lifts, but not the other one..."'
 
 st.divider()
 
