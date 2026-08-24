@@ -59,6 +59,8 @@ with rcol:
     )
 
     weight_unit_short = weight_unit.split(' ')[1]
+
+    kg_lb_ratio = 0.45359237
     
     bodyweight = st.number_input(
         label = f"Enter your BODYWEIGHT {weight_unit_short}:",
@@ -96,18 +98,20 @@ if st.button(
 
     unit_multiplier = 1
 
-    if "lbs" in st.session_state["weight_unit"]:
-        unit_multiplier = 0.45359237
+    if "(lbs)" == weight_unit_short:
+        unit_multiplier = kg_lb_ratio
 
     input_df = pd.DataFrame({
         "WEIGHT": st.session_state["input_bodyweight"] * unit_multiplier,
         f"{predictor_lifts[0]}": st.session_state[f"input_{predictor_lifts[0].lower()}"] * unit_multiplier,
         f"{predictor_lifts[1]}": st.session_state[f"input_{predictor_lifts[1].lower()}"] * unit_multiplier,
         "IS_MALE": int("Male" == st.session_state["input_sex"]),
-        "AGE_DELTA_35": np.abs(st.session_state["input_age"] - 30),
+        "AGE_DELTA_35": np.abs(st.session_state["input_age"] - 35),
     }, index=[1])
 
     numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
+
+    input_df
 
     prediction = "Prediction"
     st.session_state["prediction"] = prediction
@@ -118,12 +122,21 @@ if st.button(
     )
             
 st.markdown(
-    body = f"#### {predictor_lifts[0]}-{predictor_lifts[1]} correlation by {target_lift}",
+    body = f"#### {predictor_lifts[0]}-{predictor_lifts[1]} correlation by {target_lift} {weight_unit_short}",
     text_alignment = "center"
 )
 
+chart_data_clean = st.session_state["chart_data"]
+chart_data = chart_data_clean.copy()
+
+lifts_capitalized = [lift.capitalize() for lift in lifts]
+
+if "(lbs)" == weight_unit_short:
+    chart_data[lifts_capitalized] /= kg_lb_ratio
+    chart_data[lifts_capitalized] = chart_data[lifts_capitalized].round(2)
+
 st.scatter_chart(
-    data = st.session_state["chart_data"],
+    data = chart_data,
     x = predictor_lifts[0].capitalize(),
     y = predictor_lifts[1].capitalize(),
     color = st.session_state["target_lift"].capitalize()
