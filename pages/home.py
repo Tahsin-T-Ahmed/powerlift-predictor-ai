@@ -57,7 +57,7 @@ with rcol:
     )
     
     st.number_input(
-        label = "Enter your BODYWEIGHT (kg):",
+        label = f"Enter your BODYWEIGHT {st.session_state['weight_unit'].split(' ')[1]}:",
         min_value = 10.0,
         key = "input_bodyweight",
         value = 75.0
