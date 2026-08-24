@@ -44,16 +44,7 @@ with lcol:
         persist_state = "session"
     )
 
-    age = st.number_input(
-        label = "How old are you?",
-        min_value = 8.0,
-        key = "input_age",
-        value = 25.0
-    )
-
 with rcol:
-    predictor_lifts = [lift for lift in lifts if lift != target_lift]
-
     weight_unit = st.radio(
         label = "Preferred WEIGHT UNIT:",
         options = ["Kilograms (kg)", "Pounds (lbs)"],
@@ -65,21 +56,32 @@ with rcol:
     weight_unit_short = weight_unit.split(' ')[1]
 
     kg_lb_ratio = 0.45359237
-    
-    bodyweight = st.number_input(
-        label = f"Enter your BODYWEIGHT {weight_unit_short}:",
-        min_value = 10.0,
-        key = "input_bodyweight",
-        value = 75.0
-    )
 
-    lift_col1, lift_col2 = st.columns(2)
+    num_col1, num_col2 = st.columns(2)
+    
+    predictor_lifts = [lift for lift in lifts if lift != target_lift]
+
+    with num_col1:
+        age = st.number_input(
+            label = "Age:",
+            min_value = 8.0,
+            key = "input_age",
+            value = 25.0
+        )
+
+    with num_col2:    
+        bodyweight = st.number_input(
+            label = f"Bodyweight {weight_unit_short}:",
+            min_value = 10.0,
+            key = "input_bodyweight",
+            value = 75.0
+        )
 
     for i, predictor_lift in enumerate(predictor_lifts):
         if 0 == i:
-            col = lift_col1
+            col = num_col1
         else:
-            col = lift_col2
+            col = num_col2
 
         with col:
             st.number_input(
