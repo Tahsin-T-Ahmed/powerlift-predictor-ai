@@ -167,6 +167,11 @@ st.caption(f"Charts created from {st.session_state['chart_data'].shape[0]} of {s
 with st.container(horizontal = True, horizontal_alignment = "center"):    
     f"WARNING: This app's predictions are only estimates. Please exercise with caution."
 
+st.markdown(
+    body = "[Github Repo (Link)](https://github.com/Tahsin-T-Ahmed/powerlift-predictor-ai)",
+    text_alignment = "center"
+)
+
 with st.bottom:
     with st.container(horizontal = True, horizontal_alignment = "right"):
         st.radio(
