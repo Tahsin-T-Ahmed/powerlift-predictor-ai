@@ -94,11 +94,26 @@ st.subheader(
     text_alignment = "center"
 )
 
+@st.cache_resource
+def load_model_and_scaler(target_lift):
+    model = joblib.load(
+        filename = f"./machine-learning/artifacts/models/{target_lift}-modelxgb.pkl"
+    )
+
+    scaler = joblib.load(
+        filename = f"./machine-learning/artifacts/scalers/{target_lift}-scaler.joblib"
+    )
+
+    return model, scaler
+
 if st.button(
     label = f"Predict {target_lift}",
     width = "stretch",
     icon = ":material/touch_app:"
 ):
+
+    with st.spinner("Loading model and scaler... This will only take a few seconds."):
+        model, scaler = load_model_and_scaler(target_lift)
 
     unit_multiplier = 1
 
@@ -114,10 +129,16 @@ if st.button(
     }, index=[1])
 
     numerical_predictors = [feature for feature in input_df.columns if feature != "IS_MALE"]
+    input_df[numerical_predictors] = scaler.transform(
+        pd.DataFrame(
+            input_df[numerical_predictors],
+            columns = numerical_predictors
+        )
+    )
 
-    input_df
+    prediction_raw = model.predict(input_df).item()
 
-    prediction = "Prediction"
+    prediction = np.round(float(prediction_raw), 2)
     st.session_state["prediction"] = prediction
 
     st.markdown(
