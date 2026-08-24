@@ -103,7 +103,8 @@ def load_model_and_scaler(target_lift):
 if st.button(
     label = f"Predict {target_lift}",
     width = "stretch",
-    icon = ":material/touch_app:"
+    icon = ":material/touch_app:",
+    type = "primary"
 ):
 
     with st.spinner("Loading model and scaler... This will only take a few seconds."):
