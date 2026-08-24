@@ -118,14 +118,14 @@ if st.button(
         body = f"#### Correlation between {predictor_lifts[0]} and {predictor_lifts[1]}",
         text_alignment = "center"
     )
-    st.scatter_chart(
-        data = st.session_state["chart_data"],
-        x = predictor_lifts[0].capitalize(),
-        y = predictor_lifts[1].capitalize(),
-        color = st.session_state["target_lift"].capitalize()
-    )
+st.scatter_chart(
+    data = st.session_state["chart_data"],
+    x = predictor_lifts[0].capitalize(),
+    y = predictor_lifts[1].capitalize(),
+    color = st.session_state["target_lift"].capitalize()
+)
 
-    st.caption(f"Charts created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
+st.caption(f"Charts created from {st.session_state['chart_data'].shape[0]} of {st.session_state['training_dataset'].shape[0]} samples")
 
 with st.container(horizontal = True, horizontal_alignment = "center"):    
     f"WARNING: This app's predictions are only estimates. Please exercise with caution."
