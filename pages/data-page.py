@@ -17,6 +17,11 @@ st.subheader(
 
 st.divider()
 
+st.markdown(
+    body = "[View Kaggle Dataset: Powerlifting Database](https://www.kaggle.com/datasets/open-powerlifting/powerlifting-database)",
+    text_alignment = "center"
+)
+
 lcol, rcol = st.columns(2)
 
 @st.cache_data
