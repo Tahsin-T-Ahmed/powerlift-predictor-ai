@@ -169,17 +169,7 @@ st.caption(f"Charts created from {st.session_state['chart_data'].shape[0]} of {s
 with st.container(horizontal = True, horizontal_alignment = "center"):    
     f"WARNING: This app's predictions are only estimates. Please exercise with caution."
 
-st.markdown(
-    body = "[Github Repo (Link)](https://github.com/Tahsin-T-Ahmed/powerlift-predictor-ai)",
-    text_alignment = "center"
-)
+with st.container(horizontal = True, horizontal_alignment = "center"):
+    "Made by [Tahsin Ahmed](https://github.com/Tahsin-T-Ahmed)"
 
-# with st.bottom:
-#     with st.container(horizontal = True, horizontal_alignment = "right"):
-#         st.radio(
-#             label = "Preferred WEIGHT UNIT:",
-#             options = st.session_state["weight_units"],
-#             horizontal = True,
-#             key = "selected_weight_unit",
-#             persist_state = "session"
-#         )
+    "[Github Repo](https://github.com/Tahsin-T-Ahmed/powerlift-predictor-ai)"
