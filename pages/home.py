@@ -43,11 +43,21 @@ with lcol:
         key = "input_sex",
         persist_state = "session"
     )
+    
+    age = st.number_input(
+        label = "Age:",
+        min_value = 8.0,
+        key = "input_age",
+        value = 25.0
+    )
 
 with rcol:
-    weight_unit = st.session_state.get(
-        key = "selected_weight_unit", 
-        default = st.session_state["weight_units"][0]
+    weight_unit = st.radio(
+        label = "Preferred WEIGHT UNIT:",
+        options = st.session_state["weight_units"],
+        horizontal = True,
+        key = "selected_weight_unit",
+        persist_state = "session"
     )
 
     weight_unit_short = weight_unit.split(' ')[1]
@@ -56,23 +66,12 @@ with rcol:
     
     predictor_lifts = [lift for lift in lifts if lift != target_lift]
 
-    age_col, bodyweight_col = st.columns(2)
-
-    with age_col:
-        age = st.number_input(
-            label = "Age:",
-            min_value = 8.0,
-            key = "input_age",
-            value = 25.0
-        )
-
-    with bodyweight_col:    
-        bodyweight = st.number_input(
-            label = f"Bodyweight {weight_unit_short}:",
-            min_value = 10.0,
-            key = "input_bodyweight",
-            value = 75.0
-        )
+    bodyweight = st.number_input(
+        label = f"Bodyweight {weight_unit_short}:",
+        min_value = 10.0,
+        key = "input_bodyweight",
+        value = 75.0
+    )
         
 
     predictor_lift_col1, predictor_lift_col2 = st.columns(2)
@@ -175,12 +174,12 @@ st.markdown(
     text_alignment = "center"
 )
 
-with st.bottom:
-    with st.container(horizontal = True, horizontal_alignment = "right"):
-        st.radio(
-            label = "Preferred WEIGHT UNIT:",
-            options = st.session_state["weight_units"],
-            horizontal = True,
-            key = "selected_weight_unit",
-            persist_state = "session"
-        )
+# with st.bottom:
+#     with st.container(horizontal = True, horizontal_alignment = "right"):
+#         st.radio(
+#             label = "Preferred WEIGHT UNIT:",
+#             options = st.session_state["weight_units"],
+#             horizontal = True,
+#             key = "selected_weight_unit",
+#             persist_state = "session"
+#         )
