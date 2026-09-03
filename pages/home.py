@@ -46,9 +46,9 @@ with lcol:
     
     age = st.number_input(
         label = "Age:",
-        min_value = 8.0,
+        min_value = 8,
         key = "input_age",
-        value = 25.0
+        value = 25
     )
 
 with rcol:
